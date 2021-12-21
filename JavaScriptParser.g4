@@ -136,7 +136,7 @@ emptyStatement_
     ;
 
 expressionStatement
-    : {this.notOpenBraceAndNotFunction()}? expressionSequence eos
+    : {self.notOpenBraceAndNotFunction()}? expressionSequence eos
     ;
 
 ifStatement
@@ -149,8 +149,8 @@ iterationStatement
     | While '(' expressionSequence ')' statement                                                                              # WhileStatement
     | For '(' (expressionSequence | variableDeclarationList)? ';' expressionSequence? ';' expressionSequence? ')' statement   # ForStatement
     | For '(' (singleExpression | variableDeclarationList) In expressionSequence ')' statement                                # ForInStatement
-    // strange, 'of' is an identifier. and this.p("of") not work in sometime.
-    | For Await? '(' (singleExpression | variableDeclarationList) identifier{this.p("of")}? expressionSequence ')' statement  # ForOfStatement
+    // strange, 'of' is an identifier. and self.p("of") not work in sometime.
+    | For Await? '(' (singleExpression | variableDeclarationList) identifier{self.p("of")}? expressionSequence ')' statement  # ForOfStatement
     ;
 
 varModifier  // let, const - ECMAScript 6
@@ -160,19 +160,19 @@ varModifier  // let, const - ECMAScript 6
     ;
 
 continueStatement
-    : Continue ({this.notLineTerminator()}? identifier)? eos
+    : Continue ({self.notLineTerminator()}? identifier)? eos
     ;
 
 breakStatement
-    : Break ({this.notLineTerminator()}? identifier)? eos
+    : Break ({self.notLineTerminator()}? identifier)? eos
     ;
 
 returnStatement
-    : Return ({this.notLineTerminator()}? expressionSequence)? eos
+    : Return ({self.notLineTerminator()}? expressionSequence)? eos
     ;
 
 yieldStatement
-    : Yield ({this.notLineTerminator()}? expressionSequence)? eos
+    : Yield ({self.notLineTerminator()}? expressionSequence)? eos
     ;
 
 withStatement
@@ -204,7 +204,7 @@ labelledStatement
     ;
 
 throwStatement
-    : Throw {this.notLineTerminator()}? expressionSequence eos
+    : Throw {self.notLineTerminator()}? expressionSequence eos
     ;
 
 tryStatement
@@ -236,7 +236,7 @@ classTail
     ;
 
 classElement
-    : (Static | {this.n("static")}? identifier | Async)* (methodDefinition | assignable '=' objectLiteral ';')
+    : (Static | {self.n("static")}? identifier | Async)* (methodDefinition | assignable '=' objectLiteral ';')
     | emptyStatement_
     | '#'? propertyName '=' singleExpression
     ;
@@ -318,8 +318,8 @@ singleExpression
     | New singleExpression                                                  # NewExpression
     | singleExpression arguments                                            # ArgumentsExpression
     | New '.' identifier                                                    # MetaExpression // new.target
-    | singleExpression {this.notLineTerminator()}? '++'                     # PostIncrementExpression
-    | singleExpression {this.notLineTerminator()}? '--'                     # PostDecreaseExpression
+    | singleExpression {self.notLineTerminator()}? '++'                     # PostIncrementExpression
+    | singleExpression {self.notLineTerminator()}? '--'                     # PostDecreaseExpression
     | Delete singleExpression                                               # DeleteExpression
     | Void singleExpression                                                 # VoidExpression
     | Typeof singleExpression                                               # TypeofExpression
@@ -435,11 +435,11 @@ bigintLiteral
     ;
 
 getter
-    : {this.n("get")}? identifier propertyName
+    : {self.n("get")}? identifier propertyName
     ;
 
 setter
-    : {this.n("set")}? identifier propertyName
+    : {self.n("set")}? identifier propertyName
     ;
 
 identifierName
@@ -517,6 +517,6 @@ let_
 eos
     : SemiColon
     | EOF
-    | {this.lineTerminatorAhead()}?
-    | {this.closeBrace()}?
+    | {self.lineTerminatorAhead()}?
+    | {self.closeBrace()}?
     ;

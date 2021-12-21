@@ -34,18 +34,18 @@ channels { ERROR }
 
 options { superClass=JavaScriptLexerBase; }
 
-HashBangLine:                   { this.IsStartOfFile()}? '#!' ~[\r\n\u2028\u2029]*; // only allowed at start
+HashBangLine:                   { self.IsStartOfFile()}? '#!' ~[\r\n\u2028\u2029]*; // only allowed at start
 MultiLineComment:               '/*' .*? '*/'             -> channel(HIDDEN);
 SingleLineComment:              '//' ~[\r\n\u2028\u2029]* -> channel(HIDDEN);
-RegularExpressionLiteral:       '/' RegularExpressionFirstChar RegularExpressionChar* {this.IsRegexPossible()}? '/' IdentifierPart*;
+RegularExpressionLiteral:       '/' RegularExpressionFirstChar RegularExpressionChar* {self.IsRegexPossible()}? '/' IdentifierPart*;
 
 OpenBracket:                    '[';
 CloseBracket:                   ']';
 OpenParen:                      '(';
 CloseParen:                     ')';
-OpenBrace:                      '{' {this.ProcessOpenBrace();};
-TemplateCloseBrace:             {this.IsInTemplateString()}? '}' -> popMode;
-CloseBrace:                     '}' {this.ProcessCloseBrace();};
+OpenBrace:                      '{' {self.ProcessOpenBrace();};
+TemplateCloseBrace:             {self.IsInTemplateString()}? '}' -> popMode;
+CloseBrace:                     '}' {self.ProcessCloseBrace();};
 SemiColon:                      ';';
 Comma:                          ',';
 Assign:                         '=';
@@ -114,7 +114,7 @@ DecimalLiteral:                 DecimalIntegerLiteral '.' [0-9] [0-9_]* Exponent
 /// Numeric Literals
 
 HexIntegerLiteral:              '0' [xX] [0-9a-fA-F] HexDigit*;
-OctalIntegerLiteral:            '0' [0-7]+ {!this.IsStrictMode()}?;
+OctalIntegerLiteral:            '0' [0-7]+ {!self.IsStrictMode()}?;
 OctalIntegerLiteral2:           '0' [oO] [0-7] [_0-7]*;
 BinaryIntegerLiteral:           '0' [bB] [01] [_01]*;
 
@@ -170,26 +170,26 @@ Await:                          'await';
 /// The following tokens are also considered to be FutureReservedWords
 /// when parsing strict mode
 
-Implements:                     'implements' {this.IsStrictMode()}?;
-StrictLet:                      'let' {this.IsStrictMode()}?;
-NonStrictLet:                   'let' {!this.IsStrictMode()}?;
-Private:                        'private' {this.IsStrictMode()}?;
-Public:                         'public' {this.IsStrictMode()}?;
-Interface:                      'interface' {this.IsStrictMode()}?;
-Package:                        'package' {this.IsStrictMode()}?;
-Protected:                      'protected' {this.IsStrictMode()}?;
-Static:                         'static' {this.IsStrictMode()}?;
-Yield:                          'yield' {this.IsStrictMode()}?;
+Implements:                     'implements' {self.IsStrictMode()}?;
+StrictLet:                      'let' {self.IsStrictMode()}?;
+NonStrictLet:                   'let' {!self.IsStrictMode()}?;
+Private:                        'private' {self.IsStrictMode()}?;
+Public:                         'public' {self.IsStrictMode()}?;
+Interface:                      'interface' {self.IsStrictMode()}?;
+Package:                        'package' {self.IsStrictMode()}?;
+Protected:                      'protected' {self.IsStrictMode()}?;
+Static:                         'static' {self.IsStrictMode()}?;
+Yield:                          'yield' {self.IsStrictMode()}?;
 
 /// Identifier Names and Identifiers
 
 Identifier:                     IdentifierStart IdentifierPart*;
 /// String Literals
 StringLiteral:                 ('"' DoubleStringCharacter* '"'
-             |                  '\'' SingleStringCharacter* '\'') {this.ProcessStringLiteral();}
+             |                  '\'' SingleStringCharacter* '\'') {self.ProcessStringLiteral();}
              ;
 
-BackTick:                       '`' {this.IncreaseTemplateDepth();} -> pushMode(TEMPLATE);
+BackTick:                       '`' {self.IncreaseTemplateDepth();} -> pushMode(TEMPLATE);
 
 WhiteSpaces:                    [\t\u000B\u000C\u0020\u00A0]+ -> channel(HIDDEN);
 
@@ -204,7 +204,7 @@ UnexpectedCharacter:            . -> channel(ERROR);
 
 mode TEMPLATE;
 
-BackTickInside:                 '`' {this.DecreaseTemplateDepth();} -> type(BackTick), popMode;
+BackTickInside:                 '`' {self.DecreaseTemplateDepth();} -> type(BackTick), popMode;
 TemplateStringStartExpression:  '${' -> pushMode(DEFAULT_MODE);
 TemplateStringAtom:             ~[`];
 
